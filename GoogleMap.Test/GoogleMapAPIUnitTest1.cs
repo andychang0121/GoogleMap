@@ -42,7 +42,7 @@ namespace GoogleMap.Test
 
             PlacesResponse placeRResponse = new PlacesService().GetResponse(placeRequest);
 
-
+            // 定點尋找附近的 by Type
             PlacesRequest nearByRequest = new NearbySearchRequest()
             {
                 Language = _language,
