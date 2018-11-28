@@ -1,29 +1,35 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Google.Maps;
-using Google.Maps.Direction;
+﻿using Google.Maps;
 using Google.Maps.Geocoding;
 using Google.Maps.Places;
 using Google.Maps.Places.Details;
 using Google.Maps.Shared;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace GoogleMap.Test
 {
     public class GoogleMapAPIUnitTest1
     {
-        private readonly string _language = "zh-TW";
-        private readonly LatLng _latlng = new LatLng(25.044308271193106,121.52936895061339);
-        private readonly string _textSearchRequest = "大安森林公園";
+        /// <summary>
+        /// Ref : 街道巷弄
+        /// https://c2e.ezbox.idv.tw/address.php 郵局
+        /// </summary>
+        private const string _language = "zh-TW";
+        private readonly LatLng _latlng = new LatLng(25.044308271193106, 121.52936895061339);
+        private const string _textSearchRequest = "臺北市文山區樟新街15巷1~30號";
+        /// <summary>
+        /// 101 座標
+        /// </summary>
+        private readonly LatLng _sampleLatlng = new LatLng(25.0340, 121.5645);
 
         [Fact(DisplayName = "地址找座標")]
         public void Address2Location()
-        {   
+        {
             GeocodingRequest request = new GeocodingRequest
             {
-                Address = "台北市南京東路一段9號",
+                Address = "台北101",
                 Language = _language
             };
             GeocodeResponse response = new GeocodingService(SigningHelper.GetApiKey()).GetResponse(request);
@@ -39,13 +45,13 @@ namespace GoogleMap.Test
                 PlaceID = placeID
             };
             PlaceDetailsResponse placeDetailResponse = new PlaceDetailsService(SigningHelper.GetApiKey()).GetResponse(placeDetailRequest);
-            
+
         }
 
         [Fact(DisplayName = "依照輸入地點找出")]
         public void PlaceQuery()
         {
-            PlacesRequest placeRequest = new TextSearchRequest()
+            PlacesRequest placeRequest = new TextSearchRequest
             {
                 Query = _textSearchRequest,
                 Radius = 10000,
@@ -53,12 +59,24 @@ namespace GoogleMap.Test
             };
             PlacesResponse placeResponse = new PlacesService(SigningHelper.GetApiKey()).GetResponse(placeRequest);
         }
+
+        [Fact(DisplayName = "依照座標找出 ex: 台北 101")]
+        public void GeocodeByLatlng()
+        {
+            GeocodingRequest geoRequest = new GeocodingRequest
+            {
+                Address = _sampleLatlng,
+                Language = _language
+            };
+            GeocodeResponse geoResponse = new GeocodingService(SigningHelper.GetApiKey()).GetResponse(geoRequest);
+        }
+
         [Fact(DisplayName = "依照座標，再找出靠近的目標")]
-        public void NearBySearch()
+        public void PlaceNearBySearch()
         {
             // 定點尋找附近的 by Type
             PlacesRequest nearByRequest = new NearbySearchRequest()
-            {                  
+            {
                 Language = _language,
                 Location = _latlng,
                 Radius = 10000,
@@ -71,9 +89,8 @@ namespace GoogleMap.Test
                 LocationType locationType = geo.LocationType;
                 Viewport viewport = item.Geometry.Viewport;
                 var placeTypes = item.Types;
-                var isLocality = item.Types.FirstOrDefault(x => x.Equals(PlaceType.Locality));
+                bool isLocality = item.Types.Contains(PlaceType.Locality);
             }
-
             var jsonStr = JsonConvert.SerializeObject(nearByResponse.Results);
         }
         public static class SigningHelper
