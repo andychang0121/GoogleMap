@@ -24,3 +24,7 @@ C:\GoogleMap\GoogleMap.Test\obj\Debug\GoogleMap.Test.csproj.CopyComplete
 C:\GoogleMap\GoogleMap.Test\obj\Debug\GoogleMap.Test.dll
 C:\GoogleMap\GoogleMap.Test\obj\Debug\GoogleMap.Test.pdb
 C:\GoogleMap\GoogleMap.Test\bin\Debug\Google.Maps.dll
+C:\GoogleMap\GoogleMap.Test\bin\Debug\GoogleMap.Test.dll.config
+C:\GoogleMap\GoogleMap.Test\bin\Debug\Newtonsoft.Json.dll
+C:\GoogleMap\GoogleMap.Test\bin\Debug\Newtonsoft.Json.pdb
+C:\GoogleMap\GoogleMap.Test\bin\Debug\Newtonsoft.Json.xml
